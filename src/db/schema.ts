@@ -354,6 +354,11 @@ export const guardiansRelations = relations(guardians, ({ one, many }) => ({
   studentLinks: many(guardianStudents),
 }));
 
+export const guardianStudentsRelations = relations(guardianStudents, ({ one }) => ({
+  guardian: one(guardians, { fields: [guardianStudents.guardianId], references: [guardians.id] }),
+  student: one(students, { fields: [guardianStudents.studentId], references: [students.id] }),
+}));
+
 export const enrollmentsRelations = relations(enrollments, ({ one, many }) => ({
   student: one(students, { fields: [enrollments.studentId], references: [students.id] }),
   teacher: one(teachers, { fields: [enrollments.teacherId], references: [teachers.id] }),
