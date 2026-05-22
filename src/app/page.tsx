@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Music, Users, Calendar, BookOpen } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+  if (userId) redirect("/dashboard");
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col">
       <header className="border-b bg-white px-8 py-4 flex items-center justify-between">
