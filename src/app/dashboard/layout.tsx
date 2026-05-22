@@ -1,5 +1,8 @@
 import { Sidebar } from "@/components/layout/sidebar";
 
+// Dashboard pages are fully dynamic — they require auth and live DB data
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-stone-50">

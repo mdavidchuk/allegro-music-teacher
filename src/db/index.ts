@@ -2,7 +2,20 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
 
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
+function getDb() {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL environment variable is not set");
+  return drizzle(neon(url), { schema });
+}
+
+// Lazy singleton — created on first use, not at module load time
+let _db: ReturnType<typeof getDb> | null = null;
+
+export const db = new Proxy({} as ReturnType<typeof getDb>, {
+  get(_target, prop) {
+    if (!_db) _db = getDb();
+    return (_db as unknown as Record<string | symbol, unknown>)[prop];
+  },
+});
 
 export * from "./schema";
