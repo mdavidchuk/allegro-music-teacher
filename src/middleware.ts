@@ -38,6 +38,11 @@ export default clerkMiddleware(async (auth, req) => {
   if (!isClerkPublic(req)) {
     await auth.protect();
   }
+
+  // Inject pathname so server layouts can read it without client hooks
+  const res = NextResponse.next();
+  res.headers.set("x-pathname", req.nextUrl.pathname);
+  return res;
 });
 
 export const config = {

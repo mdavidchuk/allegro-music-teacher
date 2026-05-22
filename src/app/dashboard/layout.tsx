@@ -4,6 +4,7 @@ import { db, users } from "@/db";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import type { ReactNode } from "react";
 
 // Dashboard pages are fully dynamic — they require auth and live DB data
 export const dynamic = "force-dynamic";
@@ -26,10 +27,9 @@ export default async function DashboardLayout({
   // Block direct URL access to sub-routes until profile is complete
   if (!profileComplete) {
     const headersList = await headers();
-    const pathname = headersList.get("x-invoke-path") ?? "";
-    if (pathname !== "/dashboard" && pathname !== "") {
-      redirect("/dashboard");
-    }
+    const pathname = headersList.get("x-pathname") ?? headersList.get("x-invoke-path") ?? "";
+    const isSubRoute = pathname.startsWith("/dashboard/");
+    if (isSubRoute) redirect("/dashboard");
   }
 
   return (
